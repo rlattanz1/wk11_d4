@@ -1,6 +1,10 @@
 import produceData from "../mockData/produce.json"
 
+
 const POPULATE = "produce/POPULATE"; //duck naming convention
+const LIKE_PRODUCE = "produce/LIKE_PRODUCE"
+
+export const getAllProduce = (state) => Object.values(state.produce);
 
 export default function produceReducer(state = {}, action) {
     switch (action.type) {
@@ -11,6 +15,10 @@ export default function produceReducer(state = {}, action) {
                newState[product.id] = product;
             })
             return newState;
+        case LIKE_PRODUCE:
+            let nextState = JSON.parse(JSON.stringify(state));  //this is a deep dup of the current state cool!
+            nextState[action.productId]["liked"] = !nextState[action.productId]["liked"]
+            return nextState
       default:
         return state;
     }
@@ -24,3 +32,10 @@ export function populateProduce() {
         produce: produceData
     }
 };
+
+export function toggleLikeProduce(productId) {
+    return {
+        type: LIKE_PRODUCE,
+        productId
+    }
+}
